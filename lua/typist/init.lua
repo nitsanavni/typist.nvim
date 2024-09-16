@@ -22,6 +22,8 @@ function M.process_prompt()
 	require("typist.diff").process_response(response)
 end
 
-vim.api.nvim_create_user_command("Typist", M.open_prompt_buffer, {})
+M.setup = function()
+	vim.api.nvim_create_user_command("Typist", M.open_prompt_buffer, {})
+end
 
 return M
