@@ -2,6 +2,14 @@ local M = {}
 
 M.expand_file_refs_in_current_buf = function()
 	print("Expanding file references in the current buffer")
+
+	local bufnr = vim.api.nvim_get_current_buf()
+	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+	local contents = table.concat(lines, "\n")
+
+	local expanded = require("typist.expand_file_refs")(contents)
+
+	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, expanded)
 end
 
 M.setup = function()
