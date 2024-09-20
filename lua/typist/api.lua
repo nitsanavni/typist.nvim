@@ -14,15 +14,11 @@ local function call_openai(prompt)
 		model = "gpt-4o-mini",
 		messages = {
 			{
-				role = "system",
-				content = "You are a helpful assistant.",
-			},
-			{
 				role = "user",
 				content = prompt,
 			},
 		},
-		max_tokens = 150,
+		max_tokens = 10000,
 	}
 
 	-- Encode the payload to JSON
