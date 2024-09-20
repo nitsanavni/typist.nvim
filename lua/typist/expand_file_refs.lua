@@ -1,7 +1,5 @@
 -- expand_file_refs.lua
 
-local expand_file_refs = {}
-
 -- Utility function to check if a file exists
 local function file_exists(path)
     local f = io.open(path, "r")
@@ -25,7 +23,7 @@ end
 -- Main function to expand file references in the query string
 -- @param query (string): The multi-line string containing @filepath references
 -- @return (string): The expanded string with file contents inserted
-function expand_file_refs.expand_file_refs(query)
+local function expand_file_refs(query)
     if type(query) ~= "string" then
         error("Expected a string for 'query'")
     end
