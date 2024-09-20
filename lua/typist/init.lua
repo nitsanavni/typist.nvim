@@ -33,7 +33,7 @@ M.call_open_ai_with_current_buffer = function()
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 	local contents = table.concat(lines, "\n")
 
-	local response = require("typist.call_openai")(contents)
+	local response = require("typist.api")(contents)
 
 	vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(response, "\n"))
 end
