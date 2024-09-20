@@ -3,13 +3,15 @@ local M = {}
 -- @./my-example-file
 
 M.expand_file_refs_in_current_buf = function()
-	print("Expanding file references in the current buffer")
-
 	local bufnr = vim.api.nvim_get_current_buf()
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 	local contents = table.concat(lines, "\n")
 
-	local expanded = require("typist.expand_file_refs")(contents)
+	local current_file_path = vim.api.nvim_buf_get_name(bufnr)
+	local current_file_dir = vim.fn.fnamemodify(current_file_path, ":h")
+	local additional_paths = { current_file_dir }
+
+	local expanded = require("typist.expand_file_refs")(contents, additional_paths)
 
 	local expanded_lines = vim.split(expanded, "\n")
 
