@@ -28,9 +28,20 @@ M.prepare_prompt_from_current_buf = function()
 	vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(prepare_prompt, "\n"))
 end
 
+M.call_open_ai_with_current_buffer = function()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+	local contents = table.concat(lines, "\n")
+
+	local response = require("typist.call_openai")(contents)
+
+	vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(response, "\n"))
+end
+
 M.setup = function()
 	vim.api.nvim_create_user_command("TypistExpand", M.expand_file_refs_in_current_buf, {})
 	vim.api.nvim_create_user_command("TypistPreparePrompt", M.prepare_prompt_from_current_buf, {})
+	vim.api.nvim_create_user_command("TypistCallOpenAi", M.call_open_ai_with_current_buffer, {})
 end
 
 return M

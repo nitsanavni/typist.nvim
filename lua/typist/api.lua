@@ -1,14 +1,34 @@
-local M = {}
-
-function M.call_openai(prompt)
+local function call_openai(prompt)
+	-- Retrieve the OpenAI API key from environment variables
 	local api_key = os.getenv("OPENAI_API_KEY")
-	local url = "https://api.openai.com/v1/completions"
-	local data = vim.fn.json_encode({
-		model = "text-davinci-003",
-		prompt = prompt,
-		max_tokens = 150,
-	})
 
+	if not api_key then
+		error("OPENAI_API_KEY environment variable is not set")
+	end
+
+	-- Define the API endpoint for chat completions
+	local url = "https://api.openai.com/v1/chat/completions"
+
+	-- Construct the payload with the required structure
+	local payload = {
+		model = "gpt-4o-mini",
+		messages = {
+			{
+				role = "system",
+				content = "You are a helpful assistant.",
+			},
+			{
+				role = "user",
+				content = prompt,
+			},
+		},
+		max_tokens = 150,
+	}
+
+	-- Encode the payload to JSON
+	local data = vim.fn.json_encode(payload)
+
+	-- Make the API request using curl
 	local response = vim.fn.system({
 		"curl",
 		"-s",
@@ -23,7 +43,16 @@ function M.call_openai(prompt)
 		data,
 	})
 
-	return vim.fn.json_decode(response).choices[1].text
+	-- Decode the JSON response
+	local decoded_response = vim.fn.json_decode(response)
+
+	-- Error handling for API response
+	if decoded_response.error then
+		error("OpenAI API Error: " .. decoded_response.error.message)
+	end
+
+	-- Extract and return the assistant's reply
+	return decoded_response.choices[1].message.content
 end
 
-return M
+return call_openai
