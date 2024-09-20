@@ -3,3 +3,13 @@
 +create a new file my-example-file
 +
 +and write a few lines of text in it
+
+# 2024-09-20 10:42:46.390944
++@expand_file_refs.lua
++
++when expanding the file, we need to start with a markdown h2 like this:
++## File: `{filepath}`
++
++```
++{file contents here}
++```
