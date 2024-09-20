@@ -1,5 +1,7 @@
 local M = {}
 
+-- @./my-example-file
+
 M.expand_file_refs_in_current_buf = function()
 	print("Expanding file references in the current buffer")
 
@@ -9,7 +11,9 @@ M.expand_file_refs_in_current_buf = function()
 
 	local expanded = require("typist.expand_file_refs")(contents)
 
-	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, expanded)
+	local expanded_table = expanded:split("\n")
+
+	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, expanded_table)
 end
 
 M.setup = function()
