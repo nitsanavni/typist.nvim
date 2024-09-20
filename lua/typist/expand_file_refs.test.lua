@@ -5,6 +5,7 @@ local expand_file_refs = require("expand_file_refs")
 -- Example query string
 local query = [[
 @my-example-file
+@./example-file-2
 
 how many words in this file?
 ]]

@@ -31,7 +31,7 @@ local function expand_file_refs(query)
 	end
 
 	-- Pattern to match @ followed by a valid file path (assuming filenames without spaces)
-	local pattern = "@([%w%-%_%.]+)"
+	local pattern = "@([%w%-%_%./]+)"
 
 	-- Replace each occurrence of @filepath with the file contents if the file exists
 	local expanded = query:gsub(pattern, function(filepath)
@@ -40,7 +40,9 @@ local function expand_file_refs(query)
 			if content then
 				-- Escape backticks in content to prevent Markdown issues
 				content = content:gsub("`", "\\`")
-				return "## File: `" .. filepath .. "`\n\n```\n" .. content .. "\n```"
+				local ends_with_newline = content:sub(-1) == "\n"
+				local last_char = ends_with_newline and "" or "\n"
+				return "## File: `" .. filepath .. "`\n\n```\n" .. content .. last_char .. "```\n"
 			end
 		end
 		-- If file doesn't exist or can't be read, leave the original @filepath
