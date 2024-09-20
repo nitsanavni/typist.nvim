@@ -13,7 +13,7 @@ M.expand_file_refs_in_current_buf = function()
 
 	local expanded_lines = vim.split(expanded, "\n")
 
-	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, expanded_table)
+	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, expanded_lines)
 end
 
 M.setup = function()
