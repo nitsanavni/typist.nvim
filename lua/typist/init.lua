@@ -11,7 +11,7 @@ M.expand_file_refs_in_current_buf = function()
 
 	local expanded = require("typist.expand_file_refs")(contents)
 
-	local expanded_table = expanded:split("\n")
+	local expanded_lines = vim.split(expanded, "\n")
 
 	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, expanded_table)
 end
