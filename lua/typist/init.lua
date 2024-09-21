@@ -90,6 +90,9 @@ M.typist = function()
 		else
 			vim.cmd("rightbelow vert diffsplit " .. file.name)
 		end
+
+		-- move focus to the left
+		vim.cmd("wincmd h")
 	end
 end
 
