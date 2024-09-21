@@ -1,4 +1,4 @@
-local filepath_utils = require("filepath_utils")
+local filepath_utils = require("typist.filepath_utils")
 
 local function parse_response(response, search_paths)
 	search_paths = search_paths or {}
