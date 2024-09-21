@@ -1,6 +1,6 @@
 -- expand_file_refs.lua
 
-filepath_utils = require("filepath_utils")
+local filepath_utils = require("typist.filepath_utils")
 
 -- Utility function to read the entire contents of a file
 local function read_file(path)
