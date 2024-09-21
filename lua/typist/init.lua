@@ -42,7 +42,7 @@ M.call_open_ai_with_current_buffer = function()
 	write_to_buffer(response)
 end
 
-local pretty_print = function(tbl, indent)
+local function pretty_print(tbl, indent)
 	if not indent then
 		indent = 0
 	end
