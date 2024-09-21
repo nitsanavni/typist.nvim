@@ -13,14 +13,17 @@ local curren_buffer_contents = function()
 	return table.concat(lines, "\n")
 end
 
+local write_to_buffer = function(contents)
+	local bufnr = vim.api.nvim_get_current_buf()
+	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, vim.split(contents, "\n"))
+end
+
 -- @./my-example-file
 M.expand_file_refs_in_current_buf = function()
 	local contents = curren_buffer_contents()
 	local expanded = require("typist.expand_file_refs")(contents, additional_paths())
 
-	local expanded_lines = vim.split(expanded, "\n")
-
-	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, expanded_lines)
+	write_to_buffer(expanded)
 end
 
 M.prepare_prompt_from_current_buf = function()
@@ -28,7 +31,7 @@ M.prepare_prompt_from_current_buf = function()
 
 	local prepare_prompt = require("typist.prepare_prompt")(contents)
 
-	vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(prepare_prompt, "\n"))
+	write_to_buffer(prepare_prompt)
 end
 
 M.call_open_ai_with_current_buffer = function()
@@ -36,7 +39,7 @@ M.call_open_ai_with_current_buffer = function()
 
 	local response = require("typist.api")(contents)
 
-	vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(response, "\n"))
+	write_to_buffer(response)
 end
 
 local pretty_print = function(tbl, indent)
@@ -74,7 +77,7 @@ M.up_to_parse = function()
 	local prepare_prompt = require("typist.prepare_prompt")(expanded)
 	local response = require("typist.api")(prepare_prompt)
 	local parsed = require("typist.parse")(response, additional_paths())
-	print(pretty_print(parsed))
+	write_to_buffer(pretty_print(parsed))
 end
 
 M.setup = function()
