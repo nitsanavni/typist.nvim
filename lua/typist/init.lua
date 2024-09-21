@@ -97,12 +97,20 @@ M.typist = function()
 	end
 end
 
+local function get_diff_buffers()
+	-- Get the current window IDs
+	local left_win = vim.fn.win_getid(vim.fn.winnr("h"))
+	local right_win = vim.fn.win_getid(vim.fn.winnr("l"))
+
+	-- Get the buffer IDs for the left and right windows
+	local left_buf = vim.api.nvim_win_get_buf(left_win)
+	local right_buf = vim.api.nvim_win_get_buf(right_win)
+
+	return left_buf, right_buf
+end
+
 M.approve_current_diff = function()
-	-- make sure to select left buffer correctly we're not sure if the left buffer is selected
-	local left_winnr = vim.fn.winnr("h") -- Left side window number
-	local right_winnr = vim.fn.winnr("j") -- Right side window number
-	local left_bufnr = vim.api.nvim_win_get_buf(left_winnr) -- Current buffer (left side)
-	local right_bufnr = vim.api.nvim_win_get_buf(right_winnr) -- Right side buffer (in diff)
+	local left_bufnr, right_bufnr = get_diff_buffers()
 
 	if right_bufnr then
 		local left_contents = vim.api.nvim_buf_get_lines(left_bufnr, 0, -1, false)
