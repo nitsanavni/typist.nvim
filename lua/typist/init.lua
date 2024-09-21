@@ -98,8 +98,11 @@ M.typist = function()
 end
 
 M.approve_current_diff = function()
-	local left_bufnr = vim.api.nvim_get_current_buf() -- Current buffer (left side)
-	local right_bufnr = vim.fn.winnr("j") == 0 and vim.api.nvim_get_current_buf() or vim.fn.winnr("j") -- Right side buffer (in diff)
+	-- make sure to select left buffer correctly we're not sure if the left buffer is selected
+	local left_winnr = vim.fn.winnr("h") -- Left side window number
+	local right_winnr = vim.fn.winnr("j") -- Right side window number
+	local left_bufnr = vim.api.nvim_win_get_buf(left_winnr) -- Current buffer (left side)
+	local right_bufnr = vim.api.nvim_win_get_buf(right_winnr) -- Right side buffer (in diff)
 
 	if right_bufnr then
 		local left_contents = vim.api.nvim_buf_get_lines(left_bufnr, 0, -1, false)
