@@ -1,1 +1,3 @@
-- expand file refs: look for files in the same directory as the current file
+- [ ] parse response should return absolute paths for files
+  - [ ] extract path resolution to own file
+- [x] expand file refs: look for files in the same directory as the current file
