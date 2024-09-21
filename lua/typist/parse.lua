@@ -1,8 +1,6 @@
-local M = {}
-
-function M.parse_response(response)
+local function parse_response(response)
 	local files = {}
-	for file_name, content in response:gmatch("### File: `(.-)`%s*```%s*(.-)%s*```") do
+	for file_name, content in response:gmatch("## File: `([^`]+)`%s*```%w*%s*([%s%S]-)%s*```") do
 		table.insert(files, {
 			name = file_name,
 			content = content,
@@ -11,4 +9,4 @@ function M.parse_response(response)
 	return files
 end
 
-return M
+return parse_response
