@@ -96,12 +96,28 @@ M.typist = function()
 	end
 end
 
+M.approve_current_diff = function()
+	local left_bufnr = vim.api.nvim_get_current_buf() -- Current buffer (left side)
+	local right_bufnr = vim.fn.winnr("j") == 0 and vim.api.nvim_get_current_buf() or vim.fn.winnr("j") -- Right side buffer (in diff)
+
+	if right_bufnr then
+		local left_contents = vim.api.nvim_buf_get_lines(left_bufnr, 0, -1, false)
+		-- Write the contents of the left buffer to the right buffer
+		vim.api.nvim_buf_set_lines(right_bufnr, 0, -1, false, left_contents)
+		-- Save the right buffer
+		vim.api.nvim_buf_call(right_bufnr, function()
+			vim.cmd("w")
+		end)
+	end
+end
+
 M.setup = function()
 	vim.api.nvim_create_user_command("TypistExpand", M.expand_file_refs_in_current_buf, {})
 	vim.api.nvim_create_user_command("TypistPreparePrompt", M.prepare_prompt_from_current_buf, {})
 	vim.api.nvim_create_user_command("TypistCallOpenAi", M.call_open_ai_with_current_buffer, {})
 	vim.api.nvim_create_user_command("TypistParsed", M.up_to_parse, {})
 	vim.api.nvim_create_user_command("Typist", M.typist, {})
+	vim.api.nvim_create_user_command("TypistApproveCurrentDiff", M.approve_current_diff, {}) -- New command added
 end
 
 return M
