@@ -78,7 +78,7 @@ M.typist = function()
 
 	for _, file in ipairs(parsed_files) do
 		-- Open a new tab for each file
-		vim.cmd("tabnew")
+		vim.cmd("tabnew " .. (file.name or "Untitled"))
 
 		-- write parsed content in opened buf
 		local buf_parsed = vim.api.nvim_get_current_buf()
