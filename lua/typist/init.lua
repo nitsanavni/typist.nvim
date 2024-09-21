@@ -80,13 +80,9 @@ M.typist = function()
 		-- Open a new tab for each file
 		vim.cmd("tabnew")
 
-		-- Create a buffer for the parsed content
-		local buf_parsed = vim.api.nvim_create_buf(false, true)
+		-- write parsed content in opened buf
+		local buf_parsed = vim.api.nvim_get_current_buf()
 		vim.api.nvim_buf_set_lines(buf_parsed, 0, -1, false, vim.split(file.content, "\n"))
-
-		-- Set the left window to display the parsed content
-		vim.cmd("leftabove vnew")
-		vim.api.nvim_win_set_buf(0, buf_parsed)
 
 		-- Open the file in diff mode on the right
 		if file.path and vim.fn.filereadable(file.path) == 1 then
