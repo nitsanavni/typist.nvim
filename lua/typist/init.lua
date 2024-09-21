@@ -43,31 +43,18 @@ M.call_open_ai_with_current_buffer = function()
 end
 
 local function pretty_print(tbl, indent)
-	if not indent then
-		indent = 0
-	end
+	indent = indent or 0
 	local toprint = string.rep(" ", indent) .. "{\n"
 	indent = indent + 2
 	for k, v in pairs(tbl) do
-		toprint = toprint .. string.rep(" ", indent)
-		if type(k) == "number" then
-			toprint = toprint .. "[" .. k .. "] = "
-		elseif type(k) == "string" then
-			toprint = toprint .. k .. "= "
-		end
-		if type(v) == "number" then
-			toprint = toprint .. v .. ",\n"
-		elseif type(v) == "string" then
-			toprint = toprint .. '"' .. v .. '",\n'
-		elseif type(v) == "table" then
-			toprint = toprint .. pretty_print(v, indent + 2) .. ",\n"
+		toprint = toprint .. string.rep(" ", indent) .. (type(k) == "number" and "[" .. k .. "] = " or k .. "= ")
+		if type(v) == "table" then
+			toprint = toprint .. pretty_print(v, indent) .. ",\n"
 		else
-			toprint = toprint .. '"' .. tostring(v) .. '",\n'
+			toprint = toprint .. (type(v) == "string" and '"' .. v .. '"' or tostring(v)) .. ",\n"
 		end
 	end
-	indent = indent - 2
-	toprint = toprint .. string.rep(" ", indent) .. "}"
-	return toprint
+	return toprint .. string.rep(" ", indent - 2) .. "}"
 end
 
 M.up_to_parse = function()
@@ -80,11 +67,42 @@ M.up_to_parse = function()
 	write_to_buffer(pretty_print(parsed))
 end
 
+M.typist = function()
+	local contents = curren_buffer_contents()
+
+	local expanded = require("typist.expand_file_refs")(contents, additional_paths())
+	local prepare_prompt = require("typist.prepare_prompt")(expanded)
+	local response = require("typist.api")(prepare_prompt)
+	local parsed = require("typist.parse")(response, additional_paths())
+	local parsed_files = parsed
+
+	for _, file in ipairs(parsed_files) do
+		-- Open a new tab for each file
+		vim.cmd("tabnew")
+
+		-- Create a buffer for the parsed content
+		local buf_parsed = vim.api.nvim_create_buf(false, true)
+		vim.api.nvim_buf_set_lines(buf_parsed, 0, -1, false, vim.split(file.content, "\n"))
+
+		-- Set the left window to display the parsed content
+		vim.cmd("leftabove vnew")
+		vim.api.nvim_win_set_buf(0, buf_parsed)
+
+		-- Open the file in diff mode on the right
+		if file.path and vim.fn.filereadable(file.path) == 1 then
+			vim.cmd("rightbelow vert diffsplit " .. file.path)
+		else
+			vim.cmd("rightbelow vert diffsplit " .. file.name)
+		end
+	end
+end
+
 M.setup = function()
 	vim.api.nvim_create_user_command("TypistExpand", M.expand_file_refs_in_current_buf, {})
 	vim.api.nvim_create_user_command("TypistPreparePrompt", M.prepare_prompt_from_current_buf, {})
 	vim.api.nvim_create_user_command("TypistCallOpenAi", M.call_open_ai_with_current_buffer, {})
 	vim.api.nvim_create_user_command("TypistParsed", M.up_to_parse, {})
+	vim.api.nvim_create_user_command("Typist", M.typist, {})
 end
 
 return M
