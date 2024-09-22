@@ -20,14 +20,14 @@ end
 
 M.call_open_ai_with_current_buffer = function(model)
 	local contents = curren_buffer_contents()
-	local response = require("typist.api")(contents, model) -- Pass model to the API
+	local response = require("typist.api")(contents, model)
 	write_to_buffer(response)
 end
 
 M.typist = function(model)
 	local expanded = require("typist.expand_file_refs")(curren_buffer_contents(), additional_paths())
 	local prepare_prompt = require("typist.prepare_prompt")(expanded)
-	local response = require("typist.api")(prepare_prompt, model) -- Pass model to the API
+	local response = require("typist.api")(prepare_prompt, model)
 	local parsed = require("typist.parse")(response, additional_paths())
 	local parsed_files = parsed
 
@@ -71,7 +71,6 @@ M.approve_current_diff = function()
 end
 
 M.listen = function(files)
-	-- start a new buffer with one line for each file: @file and one extra line at the end
 	local bufnr = vim.api.nvim_create_buf(false, true)
 	local lines = {}
 	for _, file in ipairs(files) do
@@ -79,13 +78,8 @@ M.listen = function(files)
 	end
 	table.insert(lines, "")
 
-	-- Set the lines in the buffer, using the appropriate `start` and `end` indices
 	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-
-	-- Optional: open a new window to display the buffer
 	vim.api.nvim_set_current_buf(bufnr)
-
-	-- place cursor on the last line
 	vim.api.nvim_win_set_cursor(0, { #lines, 0 })
 end
 
