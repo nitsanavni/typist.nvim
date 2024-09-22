@@ -113,7 +113,12 @@ M.listen = function(files)
 		table.insert(lines, "@" .. file)
 	end
 	table.insert(lines, "")
+
+	-- Set the lines in the buffer, using the appropriate `start` and `end` indices
 	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+
+	-- Optional: open a new window to display the buffer
+	vim.api.nvim_set_current_buf(bufnr)
 end
 
 M.setup = function()
