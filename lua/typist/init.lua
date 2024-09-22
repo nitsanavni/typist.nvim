@@ -32,8 +32,7 @@ M.typist = function(model)
 	local parsed_files = parsed
 
 	for _, file in ipairs(parsed_files) do
-		local tab_name = file.name and file.name .. ".changed" or "Untitled.changed"
-		vim.cmd("tabnew " .. tab_name)
+		vim.cmd("tabnew")
 
 		local buf_parsed = vim.api.nvim_get_current_buf()
 		vim.api.nvim_buf_set_lines(buf_parsed, 0, -1, false, vim.split(file.content, "\n"))
@@ -65,6 +64,7 @@ M.approve_current_diff = function()
 		vim.api.nvim_buf_call(right_bufnr, function()
 			vim.cmd("w")
 		end)
+		vim.cmd("tabclose")
 	end
 end
 
