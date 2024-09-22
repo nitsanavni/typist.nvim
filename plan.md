@@ -1,7 +1,7 @@
 - [ ] Typist - if current buffer is a file, start a new buffer with this file in the context
-- [ ] TypistTryHarder - use a stronger LLM model
 - [ ] key map to TypistApprove
 - [ ] key map to trigger typist
+- [x] TypistTryHarder - use a stronger LLM model
 - [x] parse response should return absolute paths for files
   - [x] extract path resolution to own file
 - [x] expand file refs: look for files in the same directory as the current file
