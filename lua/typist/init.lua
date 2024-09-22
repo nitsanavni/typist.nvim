@@ -108,7 +108,7 @@ end
 M.listen = function(files)
 	-- start a new buffer with one line for each file: @file and one extra line at the end
 	local bufnr = vim.api.nvim_create_buf(false, true)
-	lines = {}
+	local lines = {}
 	for _, file in ipairs(files) do
 		table.insert(lines, "@" .. file)
 	end
