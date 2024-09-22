@@ -113,7 +113,8 @@ M.setup = function()
 	end, { nargs = 1 }) -- Allow passing model
 	vim.api.nvim_create_user_command("TypistParsed", M.up_to_parse, {})
 	vim.api.nvim_create_user_command("Typist", function(opts)
-		M.typist(opts.args or "gpt-4o-mini")
+		print("Typist called with args: " .. opts.args)
+		-- M.typist(opts.args or "gpt-4o-mini")
 	end, { nargs = "?" }) -- Allow passing model or none
 	vim.api.nvim_create_user_command("TypistApproveCurrentDiff", M.approve_current_diff, {})
 end
