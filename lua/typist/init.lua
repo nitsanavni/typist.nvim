@@ -128,7 +128,7 @@ M.setup = function()
 		M.typist(args)
 	end, { nargs = "?" })
 	vim.api.nvim_create_user_command("TypistListen", function(opts)
-		M.listen(opts.args)
+		M.listen(opts.fargs)
 	end, { nargs = "*", complete = "file" })
 	vim.api.nvim_create_user_command("TypistApproveCurrentDiff", M.approve_current_diff, {})
 end
