@@ -105,6 +105,17 @@ M.approve_current_diff = function()
 	end
 end
 
+M.listen = function(files)
+	-- start a new buffer with one line for each file: @file and one extra line at the end
+	local bufnr = vim.api.nvim_create_buf(false, true)
+	lines = {}
+	for _, file in ipairs(files) do
+		table.insert(lines, "@" .. file)
+	end
+	table.insert(lines, "")
+	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+end
+
 M.setup = function()
 	vim.api.nvim_create_user_command("TypistExpand", M.expand_file_refs_in_current_buf, {})
 	vim.api.nvim_create_user_command("TypistPreparePrompt", M.prepare_prompt_from_current_buf, {})
@@ -112,10 +123,13 @@ M.setup = function()
 		M.call_open_ai_with_current_buffer(opts.args)
 	end, { nargs = 1 }) -- Allow passing model
 	vim.api.nvim_create_user_command("TypistParsed", M.up_to_parse, {})
-	vim.api.nvim_create_user_command("Typist", function(opts)
+	vim.api.nvim_create_user_command("TypistProcessRequest", function(opts)
 		local args = opts.args ~= "" and opts.args or "gpt-4o-mini"
 		M.typist(args)
 	end, { nargs = "?" })
+	vim.api.nvim_create_user_command("TypistListen", function(opts)
+		M.listen(opts.args)
+	end, { nargs = "*", complete = "file" })
 	vim.api.nvim_create_user_command("TypistApproveCurrentDiff", M.approve_current_diff, {})
 end
 
