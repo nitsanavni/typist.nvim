@@ -1,4 +1,4 @@
-local function call_openai(prompt)
+local function call_openai(prompt, model)
 	-- Retrieve the OpenAI API key from environment variables
 	local api_key = os.getenv("OPENAI_API_KEY")
 
@@ -6,12 +6,15 @@ local function call_openai(prompt)
 		error("OPENAI_API_KEY environment variable is not set")
 	end
 
+	-- Set default model if not provided
+	model = model or "gpt-4o-mini"
+
 	-- Define the API endpoint for chat completions
 	local url = "https://api.openai.com/v1/chat/completions"
 
 	-- Construct the payload with the required structure
 	local payload = {
-		model = "gpt-4o-mini",
+		model = model,
 		messages = {
 			{
 				role = "user",
