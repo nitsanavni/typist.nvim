@@ -18,51 +18,14 @@ local write_to_buffer = function(contents)
 	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, vim.split(contents, "\n"))
 end
 
-M.expand_file_refs_in_current_buf = function()
-	local contents = curren_buffer_contents()
-	local expanded = require("typist.expand_file_refs")(contents, additional_paths())
-	write_to_buffer(expanded)
-end
-
-M.prepare_prompt_from_current_buf = function()
-	local contents = curren_buffer_contents()
-	local prepare_prompt = require("typist.prepare_prompt")(contents)
-	write_to_buffer(prepare_prompt)
-end
-
 M.call_open_ai_with_current_buffer = function(model)
 	local contents = curren_buffer_contents()
 	local response = require("typist.api")(contents, model) -- Pass model to the API
 	write_to_buffer(response)
 end
 
-local function pretty_print(tbl, indent)
-	indent = indent or 0
-	local toprint = string.rep(" ", indent) .. "{\n"
-	indent = indent + 2
-	for k, v in pairs(tbl) do
-		toprint = toprint .. string.rep(" ", indent) .. (type(k) == "number" and "[" .. k .. "] = " or k .. "= ")
-		if type(v) == "table" then
-			toprint = toprint .. pretty_print(v, indent) .. ",\n"
-		else
-			toprint = toprint .. (type(v) == "string" and '"' .. v .. '"' or tostring(v)) .. ",\n"
-		end
-	end
-	return toprint .. string.rep(" ", indent - 2) .. "}"
-end
-
-M.up_to_parse = function()
-	local contents = curren_buffer_contents()
-	local expanded = require("typist.expand_file_refs")(contents, additional_paths())
-	local prepare_prompt = require("typist.prepare_prompt")(expanded)
-	local response = require("typist.api")(prepare_prompt)
-	local parsed = require("typist.parse")(response, additional_paths())
-	write_to_buffer(pretty_print(parsed))
-end
-
 M.typist = function(model)
-	local contents = curren_buffer_contents()
-	local expanded = require("typist.expand_file_refs")(contents, additional_paths())
+	local expanded = require("typist.expand_file_refs")(curren_buffer_contents(), additional_paths())
 	local prepare_prompt = require("typist.prepare_prompt")(expanded)
 	local response = require("typist.api")(prepare_prompt, model) -- Pass model to the API
 	local parsed = require("typist.parse")(response, additional_paths())
@@ -119,15 +82,15 @@ M.listen = function(files)
 
 	-- Optional: open a new window to display the buffer
 	vim.api.nvim_set_current_buf(bufnr)
+
+	-- place cursor on the last line
+	vim.api.nvim_win_set_cursor(0, { #lines, 0 })
 end
 
 M.setup = function()
-	vim.api.nvim_create_user_command("TypistExpand", M.expand_file_refs_in_current_buf, {})
-	vim.api.nvim_create_user_command("TypistPreparePrompt", M.prepare_prompt_from_current_buf, {})
 	vim.api.nvim_create_user_command("TypistCallOpenAi", function(opts)
 		M.call_open_ai_with_current_buffer(opts.args)
-	end, { nargs = 1 }) -- Allow passing model
-	vim.api.nvim_create_user_command("TypistParsed", M.up_to_parse, {})
+	end, { nargs = 1 })
 	vim.api.nvim_create_user_command("TypistProcessRequest", function(opts)
 		local args = opts.args ~= "" and opts.args or "gpt-4o-mini"
 		M.typist(args)

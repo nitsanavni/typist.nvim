@@ -1,3 +1,4 @@
+- [ ] TypistApprove - close the tab after saving, and show toast to user
 - [ ] Typist - if current buffer is a file, start a new buffer with this file in the context
 - [ ] key map to TypistApprove
 - [ ] key map to trigger typist
