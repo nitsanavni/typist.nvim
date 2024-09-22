@@ -17,7 +17,7 @@ local function call_openai(prompt, model)
 				content = prompt,
 			},
 		},
-		max_tokens = 10000,
+		max_tokens = 4096, -- Updated max_tokens to 4096
 	}
 
 	local data = vim.fn.json_encode(payload)
