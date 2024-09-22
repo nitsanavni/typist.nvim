@@ -59,12 +59,14 @@ M.approve_current_diff = function()
 	local left_bufnr, right_bufnr = get_diff_buffers()
 
 	if right_bufnr then
+		local filename = vim.api.nvim_buf_get_name(right_bufnr)
 		local left_contents = vim.api.nvim_buf_get_lines(left_bufnr, 0, -1, false)
 		vim.api.nvim_buf_set_lines(right_bufnr, 0, -1, false, left_contents)
 		vim.api.nvim_buf_call(right_bufnr, function()
 			vim.cmd("w")
 		end)
 		vim.cmd("tabclose")
+		vim.notify(filename .. " updated")
 	end
 end
 
