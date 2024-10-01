@@ -5,6 +5,7 @@ local function call_openai(prompt, model)
 		error("OPENAI_API_KEY environment variable is not set")
 	end
 	-- gpt-4o-2024-08-06
+	-- o1-mini
 	model = model or "gpt-4o-2024-08-06" -- Default model
 
 	local url = "https://api.openai.com/v1/chat/completions"

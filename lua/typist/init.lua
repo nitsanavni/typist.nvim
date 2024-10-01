@@ -83,17 +83,34 @@ M.listen = function(files)
 	vim.api.nvim_win_set_cursor(0, { #lines, 0 })
 end
 
+local function custom_completion(arg_lead, cmd_line, cursor_pos)
+	-- Your list of custom completions
+	local completions = { "gpt-4o-mini", "gpt-4o-2024-08-06", "o1-mini" }
+	local filtered = {}
+
+	for _, completion in ipairs(completions) do
+		if completion:match(arg_lead) then
+			table.insert(filtered, completion)
+		end
+	end
+
+	return filtered
+end
+
 M.setup = function()
 	vim.api.nvim_create_user_command("TypistCallOpenAi", function(opts)
 		M.call_open_ai_with_current_buffer(opts.args)
 	end, { nargs = 1 })
+
 	vim.api.nvim_create_user_command("TypistProcessRequest", function(opts)
-		local args = opts.args ~= "" and opts.args or "gpt-4o-mini"
+		local args = opts.args ~= "" and opts.args or "gpt-4o-2024-08-06"
 		M.typist(args)
-	end, { nargs = "?" })
+	end, { nargs = "?", complete = custom_completion })
+
 	vim.api.nvim_create_user_command("TypistListen", function(opts)
 		M.listen(opts.fargs)
 	end, { nargs = "*", complete = "file" })
+
 	vim.api.nvim_create_user_command("TypistApproveCurrentDiff", M.approve_current_diff, {})
 end
 
