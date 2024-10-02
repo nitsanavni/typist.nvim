@@ -1,3 +1,3 @@
 - Go with the grain, when it comes to LLM styles.
 - File / buffer based workflows.
-- Each component / task should be executable in isolation.
+- Each component / task should be executable (aka testable) independently.

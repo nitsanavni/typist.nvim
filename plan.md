@@ -3,22 +3,10 @@
 # TODO, maybe
 
 - can we wrap it as a stand-alone cli app?
+  - nvim --headless
+  - "current buffer" fro stdin or a file
+  - diff view is headful
 - save prompts and responses
-- support executing scripts as part of file expansion
-  - I say `@!my-script.py`, it's expanded like this:
-    ```md
-    ### Script `my-script.py`
-    ```python
-    # my-script.py
-
-    ... the code of my-script.py ...
-    ```
-    output
-    ```stdout
-    ... the output of my-script.py ...
-    ```
-    [exit code: 1]
-    ```
 - checklists / recipes / templates
   - state is in files
 - interview-style workflow
@@ -30,6 +18,7 @@
 
 # Done
 
+- [x] support executing scripts as part of file expansion
 - [x] key map to TypistApprove
 - [x] key map to trigger typist
 - [x] TypistApprove - close the tab after saving, and show toast to user
