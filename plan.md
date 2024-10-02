@@ -2,9 +2,9 @@
 
 # TODO, maybe
 
-- can we wrap it as a stand-alone cli app?
+- run as stand-alone cli app
   - nvim --headless
-  - "current buffer" fro stdin or a file
+  - "current buffer" from stdin or a file
   - diff view is headful
 - save prompts and responses
 - checklists / recipes / templates
