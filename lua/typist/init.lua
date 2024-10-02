@@ -47,6 +47,11 @@ M.typist = function(model)
 	end
 end
 
+M.expand_file_refs = function()
+	local expanded = require("typist.expand_file_refs")(curren_buffer_contents(), additional_paths())
+	write_to_buffer(expanded)
+end
+
 local function get_diff_buffers()
 	local left_win = vim.fn.win_getid(vim.fn.winnr("h"))
 	local right_win = vim.fn.win_getid(vim.fn.winnr("l"))
@@ -106,6 +111,8 @@ M.setup = function()
 		local args = opts.args ~= "" and opts.args or "gpt-4o-2024-08-06"
 		M.typist(args)
 	end, { nargs = "?", complete = custom_completion })
+
+	vim.api.nvim_create_user_command("TypistExpandFileRefs", M.expand_file_refs, {})
 
 	vim.api.nvim_create_user_command("TypistListen", function(opts)
 		M.listen(opts.fargs)
