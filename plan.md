@@ -2,6 +2,28 @@
 
 # TODO, maybe
 
+- can we wrap it as a stand-alone cli app?
+- save prompts and responses
+- support executing scripts as part of file expansion
+  - I say `@!my-script.py`, it's expanded like this:
+    ```md
+    ### Script `my-script.py`
+    ```python
+    # my-script.py
+
+    ... the code of my-script.py ...
+    ```
+    output
+    ```stdout
+    ... the output of my-script.py ...
+    ```
+    [exit code: 1]
+    ```
+- checklists / recipes / templates
+  - state is in files
+- interview-style workflow
+  - state is in files
+  - generate interview-#1.md, answer inline, generate interview-#2.md, etc
 - [ ] Typist - if current buffer is a file, start a new buffer with this file in the context
 - [ ] something something refactoring
 - [ ] something something mermaid
